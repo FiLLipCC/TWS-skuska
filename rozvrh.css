@@ -1,0 +1,71 @@
+th,td,tr{
+    border: 3px solid black;
+    font-family: Arial;
+    align-items: center;
+}
+
+table{
+    border-collapse: collapse;
+    margin: auto;
+    background-color: white;
+}
+
+.pro{
+    background-color: darkslateblue;
+}
+
+.obn_tsv{
+    background-color: aqua;
+}
+
+.sjl{
+    background-color: cadetblue;
+}
+
+.anj{
+    background-color: dodgerblue;
+}
+
+.fyz{
+    background-color: mediumpurple;
+}
+
+.aet{
+    background-color: skyblue;
+}
+
+.mat{
+    background-color: brown;
+}
+
+.dej{
+    background-color: chartreuse;
+}
+
+.zpxa{
+    background-color: deepskyblue;
+}
+
+.sie{
+    background-color: darkgreen;
+}
+
+.tws{
+    background-color: blueviolet;
+}
+
+.nav{
+    background-color: midnightblue;
+}
+
+.inf{
+    background-color: darkgrey;
+}
+
+.ozp{
+    background-color: greenyellow;
+}
+
+.zit{
+    background-color: lightgreen;
+}

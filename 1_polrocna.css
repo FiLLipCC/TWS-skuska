@@ -1,0 +1,296 @@
+{MENU PODSTRÁNOK}
+
+.button_menu{
+    width: 10%;
+    padding: 5px;
+    background: limegreen;
+    border: 3px solid limegreen;
+    font-family: Arial;
+    width: 3cm; 
+    height: 3cm;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    align-content: space-around;
+    padding: 0px 0px 0px 0px ;
+    justify-content: center;
+    flex-direction: row
+}
+    
+
+.button_menu:hover { 
+    margin: 0px;
+    padding: 5px;
+    background: green;
+    border: 3px solid limegreen;
+    font-family: Arial;
+    width: 3cm;
+    height: 3cm;
+    color: white;
+    text-decoration: underline;
+    padding: 0px 0px 0px 0px ;
+    flex-direction: column;
+}
+
+{--------------------------------------------------------------------------------------------------------------------------------}
+
+{FORMULÁR}
+
+form {
+    width: 500px;
+    background: white;
+    padding: 20px;
+    margin: auto;
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: 30px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+{> TLAČIDLO FORMULÁRA}
+
+.button{
+    text-align: center;
+    border-color: skyblue;
+    background-color: skyblue;
+    padding: 6px 6px 6px 6px;
+    font-family: Arial;
+    color: white;
+    text-decoration: none;
+}
+
+
+
+.button:hover{
+    text-align: center;
+    border-color: darkcyan;
+    background-color: darkcyan;
+    padding: 6px 6px 6px 6px;
+    font-family: Arial;
+    color: white;
+    text-decoration: underline;
+}
+
+{> TEXT FORMULÁRA}
+
+textarea{
+    height: 200px;
+    width: 400px;
+    min-width: 400px;
+    max-width: 400px;
+    min-height: 200px;
+    max-height: 200px;
+}
+
+{-------------------------------------------------------------------------------------------------------------------}
+
+{ROZVRH}
+
+.rozvrh{
+   
+    border: 3px solid black;
+    font-family: Arial;
+    border-collapse: collapse;
+    margin: auto;
+    background-color: white;
+}
+
+{> PREDEMTY V ROZVRHU}
+
+.prog{
+    background-color: #9999e6;
+    border: 3px solid black;
+}
+
+
+.obn_tsv{
+    background-color: #80b3ff;
+    border: 3px solid black;
+}
+
+
+
+.sjl{
+    background-color: #99b3cc;
+    border: 3px solid black;
+}
+
+
+
+.anj{
+    background-color: #9999ff;
+    border: 3px solid black;
+}
+
+
+
+.fyz{
+    background-color: #b3b3ff;
+    border: 3px solid black;
+}
+
+
+
+.aet{
+    background-color: #b3ccff;
+    border: 3px solid black;
+}
+
+
+
+.mat{
+    background-color: #cc9980;
+    border: 3px solid black;
+}
+
+
+
+.dej{
+    background-color: #80e680;
+    border: 3px solid black;
+}
+
+
+
+.zpxa{
+    background-color: #99e6ff;
+    border: 3px solid black;
+}
+
+
+.sie{
+    background-color: #99b380;
+    border: 3px solid black;
+}
+
+
+
+.tws{
+    background-color: #b380e6;
+    border: 3px solid black;
+}
+
+
+.nav{
+    background-color: #8080cc;
+    border: 3px solid black;
+}
+
+
+.inf{
+    background-color: #e0e0e0;
+    border: 3px solid black;
+}
+
+
+
+.ozp{
+    background-color: #b3ff99;
+    border: 3px solid black;
+}
+
+
+
+.zit{
+    background-color: #99e699;
+    border: 3px solid black;
+}
+
+{-------------------------------------------------------------------------------------------------------------------------------}
+
+{HARMONOGRAM DAILY}
+
+.harmonogram{
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    font-size: 35px;
+    background-color: white;
+    border-radius: 16px;
+    text-align: center;
+    align-self: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 160px;
+    margin-right: 160px;
+}
+
+{> ODSEKY FORMULÁRA}
+
+.harmonogram ul,
+.harmonogram ol,
+.harmonogram li {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+{-------------------------------------------------------------------------------------------------------------------------------}
+
+{ZOZNAMY CIEĽOV DO BUDÚCNA}
+
+{> OBĽÚBENÉ VECI}
+
+.obl_veci{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 160px;
+    margin-right: 160px;
+    padding: 35px;
+    font-size: xx-large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+{>> NADPIS (NEFUNGOVALO NORMÁLNE CEZ STYLE)}
+
+.nadpis{
+    font-size: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+{--------------------------------------------------------------------------------------------------------}
+
+.uvodny_opis{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 160px;
+    margin-right: 160px;
+    padding: 35px;
+    font-size: xx-large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.galeria{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 160px;
+    margin-right: 160px;
+    padding: 35px;
+    font-size: xx-large;
+    font-family: Arial, Helvetica, sans-serif;
+    align-items: center;
+}
+
+
+.test{
+    align-items: center;
+}
+
+copmidsize - heat level 1 cop

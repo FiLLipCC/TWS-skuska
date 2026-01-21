@@ -1,0 +1,21 @@
+p{
+    font-size: 20px;
+    background-color: blue;
+}
+
+h1{
+    background-color: blue;
+}
+
+div{
+    background-color: blue;
+    color: white;
+}
+
+.zoskupenie{
+    background-color: blue;
+    color: white;
+    display: flex;
+    justify-content:
+    align-items
+}

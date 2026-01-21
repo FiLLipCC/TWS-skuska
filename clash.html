@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Brawler Clash</title>
+  <style>
+    body { margin: 0; background: #111; overflow: hidden; }
+    #gameCanvas { background: #222; display: block; margin: 0 auto; }
+    #ui { position: fixed; top: 10px; left: 10px; color: white; font-family: sans-serif; }
+    .btn { background:#444; padding:8px 12px; border-radius:6px; cursor:pointer; margin:4px 0; display:inline-block; }
+  </style>
+</head>
+<body>
+<canvas id="gameCanvas" width="900" height="600"></canvas>
+<div id="ui"></div>
+<script>
+// --------------------------------------------------------
+// BASIC ENGINE
+// --------------------------------------------------------
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+let keys = {};
+let lastTime = 0;
+
+window.addEventListener('keydown', e => keys[e.key] = true);
+window.addEventListener('keyup', e => keys[e.key] = false);
+
+// --------------------------------------------------------
+// BRAWLER DEFINITIONS (Original Characters)
+// --------------------------------------------------------
+const BRAWLERS = {
+  "Blitz": {
+    maxHP: 3000,
+    speed: 3.2,
+    attack: { dmg: 320, cooldown: 600, speed: 7 },
+    super: { dmg: 900, cooldown: 6000, speed: 9 },
+    gadget: {
+      name: "Shock Dash",
+      uses: 3,
+      effect: (player) => { player.x += 80 * player.facing; }
+    },
+    starPower: {
+      name: "Charged Impact",
+      passive: (player) => { player.attackDamageBonus = 60; }
+    },
+    gear: {
+      name: "Regen Core",
+      passive: (player) => {
+        if (!player.inCombat) player.hp += 0.12;
+      }
+    },
+    hypercharge: {
+      name: "Thunder Burst",
+      active: false,
+      charge: 0,
+      threshold: 1000,
+      effect: (player) => {
+        player.speed *= 1.5;
+        player.attack.dmg *= 1.8;
+      }
+    }
+  },
+  
+  "Pyra": {
+    maxHP: 2600,
+    speed: 3.0,
+    attack: { dmg: 260, cooldown: 500, speed: 6 },
+    super: { dmg: 1300, cooldown: 6500, speed: 8 },
+    gadget: {
+      name: "Flame Shield",
+      uses: 2,
+      effect: (player) => { player.shield = 600; }
+    },
+    starPower: {
+      name: "Burning Wake",
+      passive: (player) => { /* damage trail left behind */ }
+    },
+    gear: {
+      name: "Fuel Cell",
+      passive: (player) => { player.superChargeRate = 1.1; }
+    },
+    hypercharge: {
+      name: "Inferno Mode",
+      active: false,
+      charge: 0,
+      threshold: 900,
+      effect: (player) => {
+        player.attack.cooldown *= 0.5;
+      }
+    }
+  }
+};
+
+// --------------------------------------------------------
+// PLAYER
+// --------------------------------------------------------
+class Player {
+  constructor(brawler) {
+    const data = JSON.parse(JSON.stringify(brawler));
+    this.name = "Player";
+    this.x = 450;
+    this.y = 300;
+    this.facing = 1;
+    this.hp = data.maxHP;
+    this.maxHP = data.maxHP;
+    this.speed = data.speed;
+    this.attack = data.attack;
+    this.super = data.super;
+    this.gadget = data.gadget;
+    this.starPower = data.starPower;
+    this.gear = data.gear;
+    this.hyper = data.hypercharge;
+
+    // cooldown trackers
+    this.attackCD = 0;
+    this.superCD = 0;
+
+    // apply passive abilities
+    if (this.starPower) this.starPower.passive(this);
+    if (this.gear) this.gear.passive(this);
+  }
+
+  update(dt) {
+    // movement
+    if (keys['w']) this.y -= this.speed;
+    if (keys['s']) this.y += this.speed;
+    if (keys['a']) { this.x -= this.speed; this.facing = -1; }
+    if (keys['d']) { this.x += this.speed; this.facing = 1; }
+
+    // clamp position
+    this.x = Math.max(0, Math.min(canvas.width, this.x));
+    this.y = Math.max(0, Math.min(canvas.height, this.y));
+
+    // reduce cooldowns
+    this.attackCD = Math.max(0, this.attackCD - dt);
+    this.superCD = Math.max(0, this.superCD - dt);
+
+    // hypercharge buildup
+    if (this.hyper.charge < this.hyper.threshold) this.hyper.charge += dt * 0.05;
+  }
+
+  draw() {
+    ctx.fillStyle = "#0f0";
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 18, 0, Math.PI * 2);
+    ctx.fill();
+
+    // HP bar
+    ctx.fillStyle = "red";
+    ctx.fillRect(this.x - 20, this.y - 35, 40, 5);
+    ctx.fillStyle = "lime";
+    ctx.fillRect(this.x - 20, this.y - 35, 40 * (this.hp / this.maxHP), 5);
+  }
+}
+
+let player = new Player(BRAWLERS.Blitz);
+
+// --------------------------------------------------------
+// PROJECTILES
+// --------------------------------------------------------
+const projectiles = [];
+class Projectile {
+  constructor(x,y,dir,speed,dmg,color) {
+    this.x=x; this.y=y; this.dir=dir; this.speed=speed; this.dmg=dmg; this.color=color;
+  }
+  update() {
+    this.x += this.dir * this.speed;
+  }
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 5, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+// --------------------------------------------------------
+// COMBAT INPUT
+// --------------------------------------------------------
+window.addEventListener('click', ()=>{
+  if (player.attackCD <= 0) {
+    projectiles.push(new Projectile(player.x, player.y, player.facing, player.attack.speed, player.attack.dmg + (player.attackDamageBonus||0), "yellow"));
+    player.attackCD = player.attack.cooldown;
+  }
+});
+
+window.addEventListener('contextmenu', (e)=>{
+  e.preventDefault();
+  if (player.superCD<=0) {
+    projectiles.push(new Projectile(player.x, player.y, player.facing, player.super.speed, player.super.dmg, "orange"));
+    player.superCD = player.super.cooldown;
+  }
+});
+
+window.addEventListener('keydown', e => {
+  if (e.key==='g' && player.gadget.uses>0) {
+    player.gadget.effect(player);
+    player.gadget.uses--;
+  }
+  if (e.key==='h' && player.hyper.charge>=player.hyper.threshold && !player.hyper.active) {
+    player.hyper.active = true;
+    player.hyper.effect(player);
+  }
+});
+
+// --------------------------------------------------------
+// GAME LOOP
+// --------------------------------------------------------
+function gameLoop(ts){
+  const dt = ts - lastTime;
+  lastTime = ts;
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  player.update(dt);
+  player.draw();
+
+  projectiles.forEach(p=>{p.update(); p.draw();});
+
+  updateUI();
+
+  requestAnimationFrame(gameLoop);
+}
+requestAnimationFrame(gameLoop);
+
+// --------------------------------------------------------
+// UI
+// --------------------------------------------------------
+function updateUI(){
+  document.getElementById("ui").innerHTML = `
+    <div><b>Brawler:</b> Blitz</div>
+    <div>HP: ${Math.floor(player.hp)}</div>
+    <div>Attack CD: ${Math.floor(player.attackCD)}</div>
+    <div>Super CD: ${Math.floor(player.superCD)}</div>
+    <div>Gadgets left: ${player.gadget.uses}</div>
+    <div>Hypercharge: ${Math.floor(player.hyper.charge)} / ${player.hyper.threshold} (${player.hyper.active?"ACTIVE":""})</div>
+    <div class='btn' onclick='switchBrawler("Blitz")'>Blitz</div>
+    <div class='btn' onclick='switchBrawler("Pyra")'>Pyra</div>
+  `;
+}
+
+function switchBrawler(name){
+  player = new Player(BRAWLERS[name]);
+}
+</script>
+</body>
+</html>
